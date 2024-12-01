@@ -1,0 +1,77 @@
+# Screen kullanarak arka planda çalıştırma
+sudo apt-get install screen
+screen -S pnl_tracker
+python3 main.py
+# CTRL+A+D ile screen'den çıkış yapabilirsiniz
+# screen -r pnl_tracker ile tekrar bağlanabilirsiniz
+
+# Ya da systemd service olarak çalıştırma
+sudo nano /etc/systemd/system/pnl_tracker.service
+
+
+[Unit]
+Description=Binance PNL Tracker
+After=network.target
+
+[Service]
+Type=simple
+User=your_username
+WorkingDirectory=/path/to/your/project
+ExecStart=/usr/bin/python3 /path/to/your/project/main.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+
+# Service'i aktif etme
+sudo systemctl enable pnl_tracker
+sudo systemctl start pnl_tracker
+# Durumunu kontrol etme
+sudo systemctl status pnl_tracker
+
+
+Ubuntu'da çalıştırırken dikkat edilmesi gerekenler:
+Gerekli paketlerin kurulumu: pip3 install -r requirements.txt
+GUI olmadan çalışması için headless modu eklenebilir
+3. Log dosyası tutulması önemli
+Sistem başlangıcında otomatik başlatma ayarı
+Headless mod için şu şekilde bir değişiklik yapabiliriz:
+
+def __init__(self, headless_mode=False):
+    self.headless_mode = headless_mode
+    # Config yükleme
+    self.config = self.load_config()
+    
+    if not self.headless_mode:
+        # GUI setup
+        self.root = tk.Tk()
+        self.root.title("Binance PNL Takipçisi")
+        self.root.geometry("1000x600")
+        # ... GUI ile ilgili diğer kodlar ...
+    else:
+        # Sadece konsol modu için gerekli setup
+        self.setup_console_mode()
+
+def setup_console_mode(self):
+    """Konsol modu için gerekli ayarlar"""
+    print("PNL Tracker konsol modunda başlatıldı")
+    self.start_tracking_thread()
+
+# Ana program
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--headless", action="store_true", help="Run in headless mode")
+    args = parser.parse_args()
+    
+    app = BinancePNLTracker(headless_mode=args.headless)
+    try:
+        if not args.headless:
+            app.run()
+        else:
+            # Headless modda sonsuz döngü
+            while True:
+                time.sleep(1)
+    finally:
+        app.cleanup()

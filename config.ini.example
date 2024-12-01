@@ -1,0 +1,8 @@
+[DEFAULT]
+URL = https://www.binance.com/en/futures/BTCUSDT
+CheckInterval = 3
+AlertThreshold = 5
+API_KEY = tHXwXUb2NApCTzNrSN5LHL450qAoBTDIYpth5xz5A57knZk2NUA2rUoSGtYheM7Q
+API_SECRET = LgPjiOdZ8JTANEc32ufIqEgoQUwwfHRBi8vQu2Bbpgc0UrdaNhO4NHrywe3c9j0w
+TelegramToken = 7745579242:AAG9NxjJF3dCLwARn8__Bwc0GX-QNdyfv_s
+TelegramChatID = 446331690
